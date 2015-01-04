@@ -9,11 +9,12 @@ int main() {
 
 void detab(int ntab) {
 	int c;
+	int i;
 	int col = 0;
 	while((c = getchar()) != EOF) {
 		if(c == '\t') {
 			int numSpaces = (col % ntab) == 0 ? ntab : (ntab - (col % ntab));
-			for (int i = 0; i < numSpaces; ++i) {
+			for (i = 0; i < numSpaces; ++i) {
 				putchar(' ');
 			}
 			col += numSpaces;

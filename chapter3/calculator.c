@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
+#include <math.h>
 
 #define MAXOP 100
 #define NUMBER '0'
+#define FUNCTION 'a'
 
 int getop(char []);
 void push(double);
@@ -20,6 +23,16 @@ main() {
 		switch (type) {
 		case NUMBER:
 			push(atof(s));
+			break;
+		case FUNCTION:
+			if(strcmp(s, "sin") == 0)
+				push(sin(pop()));
+			else if(strcmp(s, "cos") == 0)
+				push(cos(pop()));
+			else if(strcmp(s, "tan") == 0)
+				push(tan(pop()));
+			else
+				printf("unknown function reference %s\n", s);
 			break;
 		case '+':
 			push(pop() + pop());
@@ -46,7 +59,7 @@ main() {
 				printf("error: zero division\n");
 			break;
 		case '\n':
-			printf("\t%.8g\n", pop());
+			printf("\t%.8g\n", peek());
 			break;
 		default:
 			printf("error: unknown command %s\n", s);
@@ -98,27 +111,34 @@ int getch(void);
 void ungetch(int);
 
 int getop(char s[]) {
-	int i, c;
+	int i, c, ret;
 
+	i = 0;
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
 		;
 	s[1] = '\0';
-	if(!isdigit(c) && c != '.' && c != '_')
-		return c;
-	i = 0;
-	if(c == '_') {
-		s[i] = '-';
+	if(isalpha(c)) {
+		while(isalpha(s[++i] = c = getch()))
+			;
+		ret = FUNCTION;
+	} else {
+		if(!isdigit(c) && c != '.' && c != '_')
+			return c;
+		if(c == '_') {
+			s[i] = '-';
+		}
+		if(c == '_' || isdigit(c))
+			while (isdigit(s[++i] = c = getch()))
+				;
+		if(c == '.')
+			while(isdigit(s[++i] = c = getch()))
+				;
+		ret = NUMBER;
 	}
-	if(c == '_' || isdigit(c))
-		while (isdigit(s[++i] = c = getch()))
-			;
-	if(c == '.')
-		while(isdigit(s[++i] = c = getch()))
-			;
 	s[i] = '\0';
 	if(c != EOF)
 		ungetch(c);
-	return NUMBER;
+	return ret;
 }
 
 #define BUFSIZE 100

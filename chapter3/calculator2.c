@@ -157,8 +157,13 @@ int getop(char s[]) {
 	int i, c, ret;
 	static int prevChar = 0;
 	i = 0;
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
-		;
+	if(prevChar == 0) {
+		while ((s[0] = c = getch()) == ' ' || c == '\t')
+			;
+	} else {
+		s[0] = c = prevChar;
+		prevChar = 0;
+	}
 	s[1] = '\0';
 	if(isalpha(c) || c == '=') {
 		while(isalpha(s[++i] = c = getch()))
@@ -180,7 +185,7 @@ int getop(char s[]) {
 	}
 	s[i] = '\0';
 	if(c != EOF && c != ' ' && c != '\t')
-		ungetch(c);
+		prevChar = c;
 	return ret;
 }
 

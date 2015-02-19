@@ -150,37 +150,51 @@ void clear(void) {
 	printf("stack cleared\n");
 }
 
-int getch(void);
-void ungetch(int);
+#define BUFSIZE 100
+
+char *buf;
+size_t buf_len = BUFSIZE;
+int bufp = -1;
 
 int getop(char s[]) {
 	int i, c, ret;
-	static int prevChar = 0;
+
+	if(bufp == -1 || buf[bufp - 1] == '\n') {
+		if(bufp == -1)
+			buf = malloc(sizeof(char) * BUFSIZE);
+		ret = getline(&buf, &buf_len, stdin);
+		if(ret == EOF)
+			return ret;
+		bufp = 0;
+	}
+
 	i = 0;
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
+	while ((s[0] = c = buf[bufp++]) == ' ' || c == '\t')
 		;
 	s[1] = '\0';
 	if(isalpha(c) || c == '=') {
-		while(isalpha(s[++i] = c = getch()))
+		while(isalpha(s[++i] = c = buf[bufp++]))
 			;
 		ret = FUNCTION;
 	} else {
+		if(c == '\n')
+			bufp = -1;
 		if(!isdigit(c) && c != '.' && c != '_')
 			return c;
 		if(c == '_') {
 			s[i] = '-';
 		}
 		if(c == '_' || isdigit(c))
-			while (isdigit(s[++i] = c = getch()))
+			while (isdigit(s[++i] = c = buf[bufp++]))
 				;
 		if(c == '.')
-			while(isdigit(s[++i] = c = getch()))
+			while(isdigit(s[++i] = c = buf[bufp++]))
 				;
 		ret = NUMBER;
 	}
 	s[i] = '\0';
-	if(c != EOF && c != ' ' && c != '\t')
-		ungetch(c);
+	if(c != EOF)
+		bufp--;
 	return ret;
 }
 
@@ -197,18 +211,3 @@ double getVar(char v) {
 	return vars['z' - v];
 }
 
-#define BUFSIZE 100
-
-char buf[BUFSIZE];
-int bufp = 0;
-
-int getch(void) {
-	return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-void ungetch(int c) {
-	if(bufp >= BUFSIZE)
-		printf("ungetch: too many characters\n");
-	else
-		buf[bufp++] = c;
-}

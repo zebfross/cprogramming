@@ -10,7 +10,7 @@
 #define VARIABLE 'v'
 #define NUM_VARS 'z' - 'A' + 1
 
-int getop(char []);
+int getop(char *);
 void push(double);
 double pop(void);
 double peek(void);
@@ -153,32 +153,32 @@ void clear(void) {
 int getch(void);
 void ungetch(int);
 
-int getop(char s[]) {
+int getop(char *s) {
 	int i, c, ret;
 	static int prevChar = 0;
 	i = 0;
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
+	while ((*s = c = getch()) == ' ' || c == '\t')
 		;
-	s[1] = '\0';
+	*++s = '\0';
 	if(isalpha(c) || c == '=') {
-		while(isalpha(s[++i] = c = getch()))
+		while(isalpha(*s++ = c = getch()))
 			;
 		ret = FUNCTION;
 	} else {
 		if(!isdigit(c) && c != '.' && c != '_')
 			return c;
 		if(c == '_') {
-			s[i] = '-';
+			*s++ = '-';
 		}
 		if(c == '_' || isdigit(c))
-			while (isdigit(s[++i] = c = getch()))
+			while (isdigit(*s++ = c = getch()))
 				;
 		if(c == '.')
-			while(isdigit(s[++i] = c = getch()))
+			while(isdigit(*s++ = c = getch()))
 				;
 		ret = NUMBER;
 	}
-	s[i] = '\0';
+	*s = '\0';
 	if(c != EOF && c != ' ' && c != '\t')
 		ungetch(c);
 	return ret;

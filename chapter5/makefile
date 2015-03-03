@@ -1,5 +1,6 @@
 SHELL = /bin/sh
 UNITY_ROOT = ../unity
+CFLAGS = -Wall
 
 getint:
 	gcc getint.c ungetch.c -o getint
@@ -16,6 +17,11 @@ strend:
 strn:
 	gcc strn.c -o strn
 
-tests:
-	gcc -Wall -Itest -I. -I${UNITY_ROOT} ${UNITY_ROOT}/unity.c ${wildcard *.c} ${wildcard test/*.c} -o test.exe
+expr:
+	gcc ${CFLAGS} expr_main.c expr.c -o expr.exe
 
+tests1:
+	gcc ${CFLAGS} -Itest -I. -I${UNITY_ROOT} ${UNITY_ROOT}/unity.c exercises.c test/exercises_test.c test/exercises_test_runner.c -o test.exe
+
+tests2:
+	gcc ${CFLAGS} -Itest -I. -I${UNITY_ROOT} ${UNITY_ROOT}/unity.c expr.c test/expr_test.c test/expr_test_runner.c -o test.exe

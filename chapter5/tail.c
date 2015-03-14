@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 		len += 1;
 	}
 
-	int ref = i--;
+	int ref = i;
 	for(i; i < num_lines && i < len; ++i) {
 		printf("%s\n", lines[i]);
 		free(lines[i]);

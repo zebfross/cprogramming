@@ -31,6 +31,9 @@ strn:
 expr:
 	gcc ${CFLAGS} expr_main.c expr.c -o expr.exe
 
+tail:
+	gcc ${CFLAGS} tail.c utils.c -o tail.exe
+
 tests:
 	gcc ${CFLAGS} ${INC_DIRS} ${TEST_SRC_FILES} -o test.exe
 

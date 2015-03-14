@@ -1,25 +1,30 @@
 #include "expr.h"
 #include "unity.h"
+#include "unity_fixture.h"
 
-void setUp(void) {
+TEST_GROUP(ExprCode);
+
+TEST_SETUP(ExprCode) 
+{
 
 }
 
-void tearDown(void) {
+TEST_TEAR_DOWN(ExprCode) 
+{
 
 }
 
-void test_no_args(void) {
+
+TEST(ExprCode, test_no_args) {
 	int c;
 	double res;
 	char *argv[] = {"expr.exe"};
 	c = 1;
-	res = expr(c, argv);
-	
+	res = expr(c, argv);	
 	TEST_ASSERT_EQUAL_FLOAT(0, res);
 }
 
-void test_add(void) {
+TEST(ExprCode, test_add) {
 
 	int c;
 	double res;
@@ -30,7 +35,7 @@ void test_add(void) {
 	TEST_ASSERT_EQUAL_FLOAT(1100, res);
 }
 
-void test_sub(void) {
+TEST(ExprCode, test_sub) {
 
 
 	int c;
@@ -42,7 +47,7 @@ void test_sub(void) {
 	TEST_ASSERT_EQUAL_FLOAT(-100, res);
 }
 
-void test_mult(void) {
+TEST(ExprCode, test_mult) {
 
 
 	int c;
@@ -54,7 +59,7 @@ void test_mult(void) {
 	TEST_ASSERT_EQUAL_FLOAT(210, res);
 }
 
-void test_div(void) {
+TEST(ExprCode, test_div) {
 
 	int c;
 	double res;
